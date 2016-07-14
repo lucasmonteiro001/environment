@@ -7,27 +7,23 @@ var gulp = require('gulp');
 var connect = require('gulp-connect'); // Runs local dev server
 var open = require('gulp-open'); // Opens a URL in the web browser
 var browserify = require('browserify'); // Bundles JS
-var sourcemaps = require('gulp-sourcemaps');
+var reactify = require('reactify'); // Transforms React JSX to JS
 var source = require('vinyl-source-stream'); // Use conventional text streams with Gulp
 var concat = require('gulp-concat'); // Concatenates files
 var lint = require('gulp-eslint'); // Lint JS files, including JSX
-var babel = require('gulp-babel');
-var buffer = require('vinyl-buffer');
-var fs = require("fs");
-
 
 var config = {
-    port: 3000,
+    port: 9005,
     devBaseUrl: 'http:localhost',
     paths: {
         html: './src/*.html',
-        js: './src/**/*.js',
+        js: './src/**/.js',
         css: [
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
             'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
         ],
         dist: './dist',
-        mainJs: './src/js/main.js'
+        mainJs: './src/main.js'
     }
 };
 
@@ -54,17 +50,17 @@ gulp.task('html', function () {
         .pipe(connect.reload()); // reload the server
 });
 
-gulp.task('js-bundle', function () {
-
-    let bundleStream = browserify(config.paths.mainJs)
-        .transform("babelify", {presets: ["es2015"]}).bundle();
-
-    bundleStream
+gulp.task('js', function () {
+    browserify(config.paths.mainJs)
+        .transform(reactify) // transform any js we get using a plugin, in this case, reactify, which compiles JSX
+        .bundle() // bundle all js files into one
+        .on('error', console.error.bind(console))
         .pipe(source('bundle.js'))
-        .pipe(gulp.dest(config.paths.dist + '/scripts'));
+        .pipe(gulp.dest(config.paths.dist + '/scripts'))
+        .pipe(connect.reload());
 });
 
-gulp.task('css-bundle', function () {
+gulp.task('css', function () {
     gulp.src(config.paths.css)
         .pipe(concat('bundle.css'))
         .pipe(gulp.dest(config.paths.dist + '/css'));
@@ -80,10 +76,8 @@ gulp.task('lint', function () {
 gulp.task('watch', function() {
     // Everytime any file under config.paths.html change, reload the server
     gulp.watch(config.paths.html, ['html']);
-    gulp.watch(config.paths.css, ['css-bundle']);
-    gulp.watch(config.paths.js, ['js-bundle', 'lint']);
+    gulp.watch(config.paths.js, ['js', 'lint']);
 })
 
 // Default task to ben run when 'gulp'is typed on terminal
-gulp.task('default', ['html', 'js-bundle', 'css-bundle', 'lint', 'open', 'watch']);
-// gulp.task('default', ['html', 'js', 'css', 'lint', 'open', 'watch']);
+gulp.task('default', ['html', 'js', 'css', 'lint', 'open', 'watch']);

@@ -10,10 +10,24 @@
     "type": "git",
     "url": "https://github.com/lucasmonteiro001/environment.git"
   },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
   "dependencies": {
+    "babelify": "^7.3.0",
     "bootstrap": "^3.3.6",
     "browserify": "^11.0.1",
     "flux": "^2.0.3",
+    "fs": "0.0.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^4.1.0",
@@ -31,6 +45,10 @@
   "homepage": "https://github.com/lucasmonteiro001/environment",
   "devDependencies": {
     "babel-core": "^6.10.4",
-    "babel-preset-es2015": "^6.9.0"
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "vinyl-buffer": "^1.0.0"
   }
 }

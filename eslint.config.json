@@ -1,4 +1,7 @@
 {
+  "ecmaFeatures": {
+    "modules": true
+  },
   "env": {
     "browser": true,
     "node": true,
@@ -13,6 +16,9 @@
     "no-underscore-dangle": 0,
     "no-alert": 0,
     "no-lone-blocks": 0
+  },
+  "parserOptions": {
+    "sourceType": "module"
   },
   "globals": {
     "jQuery": true,
