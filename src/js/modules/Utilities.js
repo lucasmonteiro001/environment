@@ -55,13 +55,66 @@ export default class Utilities {
     }
 
     /**
-     * Get an object containing Errors and the Infered Values from {content}
-     * @param inferedValues
+     * Given the first line, infer its value types and checks if every other line has the same type, if not, it's an
+     * error. Also, converts integer to real if there's at least one real number in the column.
+     * @param inferredValues
      * @param content
      * @param delimiter
+     * @returns {{errors: Set (contains all line numbers that have errors),
+     * inferredValues: (Array.<T>|ArrayBuffer|string|Blob|*)}}
      */
-    static getErrorsAndInferedValues (inferedValues, content, delimiter) {
-        throw "TBD";
+    static getErrorsAndInferredValues (inferredValues, content, delimiter) {
+
+        let firstLine = content[0],
+            firstLineLength = firstLine.split(delimiter).length,
+            errors = new Set();
+
+        // just copying the array
+        let newInferredValues = inferredValues.slice();
+
+        // Search for errors
+        $.each(content, (i, line) => {
+
+            // If line is empty, it's an error
+            if(line === "") {
+                errors.add(i);
+                return;
+            }
+
+            line = line.split(delimiter);
+
+            // If line's size is different of firstLineLength, it's an error
+            if(line.length !== firstLineLength) {
+                errors.add(i);
+            }
+            else { // If both lines have the same size
+
+                var infValues = Utilities.inferValues(line);
+
+                // For each inferred value of the current line
+                $.each(infValues, (j, infValue) => {
+
+                    // If the new inferred value is equal to the first line's inferred value, there is no error
+                    if(infValue === inferredValues[j]) {
+                        return;
+                    }
+                    else {
+                        // Accepts that integer should be converted to real
+                        if((infValue === "integer" || infValue === "real") &&
+                            (inferredValues[j] === "integer" || inferredValues[j] === "real")) {
+
+                            newInferredValues[j] = "real";
+                        }
+                        else { // If there's no match, it's an error
+                            errors.add(i);
+                        }
+                    }
+                });
+
+            }
+        });
+
+        return {errors: errors, inferredValues: newInferredValues};
     }
 
     /**
@@ -94,27 +147,32 @@ export default class Utilities {
         });
 
         return json;
-    };
+    }
 
+    /**
+     * Try to infer the type of {val}
+     * @param val
+     * @returns {*}
+     */
     static inferValue (val) {
 
         let inferedValue = null,
-            val_aux = Number(val);
+            aux = Number(val);
 
         // If val is a string, get rid of leading and trailing '"'
         if(val[0] === '"' && val[val.length - 1] === '"') {
-            val_aux = Number(val.substring(1, val.length - 1));
+            aux = Number(val.substring(1, val.length - 1));
         }
 
         // If val is a Number
-        if(val_aux !== undefined && !isNaN(val_aux)) {
+        if(aux !== undefined && !isNaN(aux)) {
 
             // Check if val is Integer
-            if((val_aux % 10).toString().indexOf(".") == -1) {
+            if((aux % 10).toString().indexOf(".") === -1) {
                 inferedValue = "integer";
             }
             // Check if val is Real
-            else if((val_aux % 10).toString().indexOf(".") >= 0) {
+            else if((aux % 10).toString().indexOf(".") >= 0) {
                 inferedValue = "real";
             }
             else {
@@ -124,19 +182,19 @@ export default class Utilities {
         else { // If val is not a number
 
             // TODO use momentjs library to make this cast
-            val_aux = new Date(val);
+            aux = new Date(val);
 
             // Check if val is a Date
-            if(val_aux.getDate()) {
+            if(aux.getDate()) {
                 inferedValue = "Date";
             }
             // Get rid of leading and trailing '"'
-            else if(val_aux[0] === '"' && val_aux[val.length - 1] === '"') {
-                val_aux = new Date(val.substring(1, val.length - 1));
+            else if(aux[0] === '"' && aux[val.length - 1] === '"') {
+                aux = new Date(val.substring(1, val.length - 1));
             }
 
             // If val is a date
-            if(val_aux.getDate()) {
+            if(aux.getDate()) {
                 inferedValue = "Date";
             }
             // If none of the above checks matched, infer that val is a string
@@ -145,6 +203,30 @@ export default class Utilities {
             }
         }
         return inferedValue;
-    };
+    }
+
+    /**
+     * Returns an array with the inferred values of each {array} element
+     * @param array
+     * @returns {*|Array}
+     */
+    static inferValues (array) {
+
+        return array.map(function(val) {
+            return Utilities.inferValue(val);
+        });
+    }
+
+    static split(string, delimeter) {
+
+        let arr = string.split(delimeter);
+
+        // Trim the array
+        arr = arr.map((val) => {
+            return val.trim();
+        });
+
+        return arr;
+    }
 
 }

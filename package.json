@@ -36,6 +36,7 @@
     "gulp-eslint": "^0.15.0",
     "gulp-open": "^2.0.0",
     "jquery": "^3.0.0",
+    "lodash": "^4.13.1",
     "vinyl-source-stream": "^1.1.0"
   },
   "author": "Lucas Monteiro",
