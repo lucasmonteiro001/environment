@@ -4,9 +4,10 @@
 
 "use strict";
 
-const sum = (a, b) => {
-    // sdafg
-    return a + b;
-};
+import BarChart from './barChart/BarChart';
 
-module.exports = sum;
+global.$ = global.jQuery = require('jquery'); // Defines jquery globally
+
+let b = new BarChart();
+
+b.print();

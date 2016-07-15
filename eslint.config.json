@@ -1,4 +1,4 @@
-{
+{ // ref http://eslint.org/docs/rules/
   "ecmaFeatures": {
     "modules": true
   },
@@ -15,7 +15,15 @@
     "no-unused-vars": 0,
     "no-underscore-dangle": 0,
     "no-alert": 0,
-    "no-lone-blocks": 0
+    "no-lone-blocks": 0,
+    "no-dupe-args": 0, // disallow duplicate arguments in function definitions
+    "no-dupe-keys": 0, // disallow duplicate keys in object literals
+    "no-extra-parens": 0,
+    "no-irregular-whitespace": 0,
+    "no-sparse-arrays": 0,
+    "no-unreachable": 0,
+    "use-isnan": 0,
+    "valid-jsdoc": 0
   },
   "parserOptions": {
     "sourceType": "module"

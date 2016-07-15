@@ -11,7 +11,7 @@ console.log("cool");
 // const Animal = require('./Animal');
 console.log(Animal);
 let a = new Animal("elephant");
-let b = new Animal("lionasdf");
+let b = new Animal("zebra");
 // let a = new Animal("myname");
 
 alert(a.getName() + "\t" + b.getName() + '\t QWERTY' + Person.PROP);

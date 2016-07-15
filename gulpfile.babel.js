@@ -3,35 +3,39 @@
  */
 "use strict";
 
-let gulp = require('gulp'),
+const gulp = require('gulp'),
     connect = require('gulp-connect'), // Runs local dev server
     open = require('gulp-open'), // Opens a URL in the web browser
     browserify = require('browserify'), // Bundles JS
-    sourcemaps = require('gulp-sourcemaps'),
     source = require('vinyl-source-stream'), // Use conventional text streams with Gulp
     concat = require('gulp-concat'), // Concatenates files
     lint = require('gulp-eslint'), // Lint JS files, including JSX
-    babel = require('gulp-babel'),
-    buffer = require('vinyl-buffer');
+    babel = require('gulp-babel');
 
-let config = {
+const config = {
     port: 3000,
     devBaseUrl: 'http:localhost',
+    root: "dist",
     paths: {
-        html: './src/*.html',
+        html: './src/**/*.html',
         js: './src/**/*.js',
         css: [
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
             'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
         ],
         dist: './dist',
-        mainJs: './src/js/main.js'
+        landingPage: 'dist/index.html'
+    },
+    distPaths: {
+        js: './dist/js/',
+        html: './dist',
+        css: './dist/css/'
     }
 };
 
 /**
- * Return a file after bundling
- * @param file
+ * Create a bundled file
+ * @param options
  */
 const bundle = (options) => {
 
@@ -64,7 +68,7 @@ const bundle = (options) => {
 // Starts a local development server
 gulp.task('connect', () => {
     connect.server({ // server config
-        root: ['dist'],
+        root: [config.root],
         port: config.port,
         base: config.devBaseUrl,
         livereload: true // anytime files change, it will reload the browser
@@ -74,30 +78,40 @@ gulp.task('connect', () => {
 // Open a given file in the server
 // Dependencies: task connect
 gulp.task('open', ['connect'], () => {
-    gulp.src('dist/index.html')
+
+    gulp.src(config.paths.landingPage)
         .pipe(open({uri: config.devBaseUrl + ":" + config.port + '/'}));
 });
 
 gulp.task('html', () => {
+
     gulp.src(config.paths.html)
-        .pipe(gulp.dest(config.paths.dist)) // pipes all html files and send them to the destination
+        .pipe(gulp.dest(config.distPaths.html)) // pipes all html files and send them to the destination
         .pipe(connect.reload()); // reload the server
 });
 
 gulp.task('js-bundle', () => {
 
-    bundle({distPath: config.paths.dist + '/scripts',
-        filePath: config.paths.mainJs,
+    bundle({
+        distPath: config.distPaths.js,
+        filePath: './src/js/main.js',
         fileName: "main.js"});
+
+    bundle({
+        distPath: config.distPaths.js,
+        filePath: './src/js/test.js',
+        fileName: "test.js"});
 });
 
 gulp.task('css-bundle', () => {
+
     gulp.src(config.paths.css)
         .pipe(concat('bundle.css'))
-        .pipe(gulp.dest(config.paths.dist + '/css'));
+        .pipe(gulp.dest(config.distPaths.css));
 });
 
 gulp.task('lint', () => {
+
     return gulp.src(config.paths.js)
         .pipe(lint({config: 'eslint.config.json'}))
         .pipe(lint.format());
@@ -105,6 +119,7 @@ gulp.task('lint', () => {
 
 // Everytime someething changes, reload all the files and server
 gulp.task('watch', () => {
+
     // Everytime any file under config.paths.html change, reload the server
     gulp.watch(config.paths.html, ['html']);
     gulp.watch(config.paths.css, ['css-bundle']);
