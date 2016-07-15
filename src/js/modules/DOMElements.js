@@ -51,6 +51,9 @@ export default class DOMElements {
             case 'button':
                 element = $('<button type="button">');
                 break;
+            case 'p':
+                element = $('<p>');
+                break;
             default:
                 throw `Element type [${type}] not supported!!!`;
 

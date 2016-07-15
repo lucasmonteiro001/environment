@@ -72,13 +72,12 @@ $(document).ready(() => {
                     return false;
                 }
 
-                // escreve os valores inferidos
                 Table.writeInferredValues(global.inferredValues, table, header, DefaultValues.DATA_TYPES);
 
-                return false;
-
                 // coloca um checkbox para opcao de dados hierarquicos
-                tbl.writeIsHierarchical(table);
+                Table.drawHierarchicalCheckbox();
+
+                return false;
 
                 // monitora o valor do tipo inferido
                 $('#tipoInferido').find('select').change(function(e) {
