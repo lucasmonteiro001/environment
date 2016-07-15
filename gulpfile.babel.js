@@ -21,10 +21,11 @@ const config = {
         js: './src/**/*.js',
         css: [
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
-            'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
+            'node_modules/bootstrap/dist/css/bootstrap-theme.min.css',
+            './src/**/*.css'
         ],
         dist: './dist',
-        landingPage: 'dist/index.html'
+        landingPage: 'dist/vis.html'
     },
     distPaths: {
         js: './dist/js/',
@@ -80,14 +81,15 @@ gulp.task('connect', () => {
 gulp.task('open', ['connect'], () => {
 
     gulp.src(config.paths.landingPage)
-        .pipe(open({uri: config.devBaseUrl + ":" + config.port + '/'}));
+        .pipe(open({uri: config.devBaseUrl + ":" + config.port + '/vis.html'}));
 });
 
 gulp.task('html', () => {
 
     gulp.src(config.paths.html)
-        .pipe(gulp.dest(config.distPaths.html)) // pipes all html files and send them to the destination
+        .pipe(gulp.dest(config.paths.dist)) // pipes all html files and send them to the destination
         .pipe(connect.reload()); // reload the server
+
 });
 
 gulp.task('js-bundle', () => {
@@ -101,6 +103,11 @@ gulp.task('js-bundle', () => {
         distPath: config.distPaths.js,
         filePath: './src/js/test.js',
         fileName: "test.js"});
+
+    bundle({
+        distPath: config.distPaths.js,
+        filePath: './src/js/vis.js',
+        fileName: "vis.js"});
 });
 
 gulp.task('css-bundle', () => {
