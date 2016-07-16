@@ -72,6 +72,11 @@ export default class Table {
         tbody.append(row);
     }
 
+    /**
+     * Write only rows that belong to errors
+     * @param errors
+     * @param content
+     */
     static writeInvalidRows (errors, content) {
 
         let tbody = $('tbody');
@@ -111,6 +116,11 @@ export default class Table {
 
     }
 
+    /**
+     * Write only rows that do not belong to errors
+     * @param errors
+     * @param content
+     */
     static writeValidRows(errors, content) {
 
         let tbody = $('tbody');
@@ -151,6 +161,49 @@ export default class Table {
         });
 
 
+    }
+
+    static writeHierarchicalRow (header, inferredValues) {
+
+        let tbody = $("tbody"),
+            button = DOMElements.new('button', {text: 'Generate object', id: 'genHierarchicalObj'});
+
+        // Remove previous hierarchical row
+        $('.hierarchicalRow').remove();
+
+        // Get non-number cols
+        let validCols = header.filter( (val, index) => {
+            if(inferredValues[index] === "Date" || inferredValues[index] === "string") {
+                return true;
+            }
+        });
+
+        let hierarchicalRow = DOMElements.new('tr', {class: 'hierarchicalRow'});
+
+        // For each valid column
+        $.each(validCols, (index, val) => {
+
+            let newTd = DOMElements.new('td', {text: val}),
+                newSelect = DOMElements.new('select', {value: val});
+
+            // Append the first value for each select
+            newSelect.append(DOMElements.new('option', {value: '#', text: '#'}));
+
+            // Add the missing select values
+            $.each(validCols, (i, v) => {
+
+                newSelect.append(DOMElements.new('option', {value: v, text: v}));
+            });
+
+            newTd.append(newSelect);
+
+            hierarchicalRow.append(newTd);
+
+        });
+
+        hierarchicalRow.append(button);
+
+        tbody.find('tr').eq(0).after(hierarchicalRow);
     }
 
 }

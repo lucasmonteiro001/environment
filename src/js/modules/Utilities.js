@@ -128,12 +128,21 @@ export default class Utilities {
     static csvToJSON (header, content, delimiter) {
 
         // recebe uma string e faz virar um array
-        let keys = header.split(delimiter);
+        let keys;
+
+        if(typeof header === "string") {
+            keys = header.split(delimiter);
+        }
+        else {
+            keys = header;
+        }
 
         // obtem o array de objetos
-        let json = content.map(function(val, i) {
+        let json = content.map( (val) => {
 
-            val = val.split(delimiter);
+            if(typeof val === "string") {
+                val = val.split(delimiter);
+            }
 
             let obj = {};
 
