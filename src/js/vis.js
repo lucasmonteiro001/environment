@@ -6,6 +6,7 @@ import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import Dimension from  './base/Dimension';
 import VisualizationTechnique from  './base/VisualizationTechnique';
+import QuantitativeDisplay from  './base/QuantitativeDisplay';
 
 let d = new Dimension('ola', 'temporal');
 let v = new VisualizationTechnique();
@@ -13,6 +14,11 @@ v.dataSet = [d];
 
 console.log(d);
 console.log(v);
+
+
+let q = new QuantitativeDisplay();
+
+console.log(q)
 
 global.$ = global.jQuery = require('jquery');
 
