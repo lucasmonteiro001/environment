@@ -4,6 +4,12 @@
 import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
+import Dimension from  './base/Dimension';
+
+let d = new Dimension('ola', 'temporal');
+console.log(d.dataType)
+
+console.log(d);
 
 global.$ = global.jQuery = require('jquery');
 
