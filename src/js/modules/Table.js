@@ -91,7 +91,7 @@ export default class Table {
 
                 if(index === 0) {
 
-                    let lineNumberInCSV = DOMElements.new('span', {text: "[" + (i + 2) + "] ", class: 'cssRow'}),
+                    let lineNumberInCSV = DOMElements.new('span', {text: (i + 2), class: 'cssRow'}),
                         td = DOMElements.new('td', {text: data});
 
                     newLine.append(td);
@@ -131,7 +131,7 @@ export default class Table {
 
                     if(index === 0) {
 
-                        let lineNumberInCSV = DOMElements.new('span', {text: "[" + (i + 2) + "] ", class: 'cssRow'}),
+                        let lineNumberInCSV = DOMElements.new('span', {text: (i + 2), class: 'cssRow'}),
                             td = DOMElements.new('td', {text: data});
 
                         newLine.append(td);
