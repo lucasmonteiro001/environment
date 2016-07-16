@@ -57,16 +57,18 @@ export default class Utilities {
     /**
      * Given the first line, infer its value types and checks if every other line has the same type, if not, it's an
      * error. Also, converts integer to real if there's at least one real number in the column.
+     *
+     * The Set of Errors contains all line numbers from the csv file that have errors. Beware that in the
+     * csv, the line numbers returned in this function should be added by 2. Example: If the line returned in the Set is
+     * 2, that means that in the csv file this line is 4.
      * @param inferredValues
      * @param content
-     * @param delimiter
-     * @returns {{errors: Set (contains all line numbers that have errors),
-     * inferredValues: (Array.<T>|ArrayBuffer|string|Blob|*)}}
+     * @returns {{errors: Set, inferredValues: (Array.<T>|ArrayBuffer|string|Blob|*)}}
      */
-    static getErrorsAndInferredValues (inferredValues, content, delimiter) {
+    static getErrorsAndInferredValues (inferredValues, content) {
 
         let firstLine = content[0],
-            firstLineLength = firstLine.split(delimiter).length,
+            firstLineLength = firstLine.length,
             errors = new Set();
 
         // just copying the array
@@ -76,12 +78,10 @@ export default class Utilities {
         $.each(content, (i, line) => {
 
             // If line is empty, it's an error
-            if(line === "") {
+            if(line === "" || line === []) {
                 errors.add(i);
                 return;
             }
-
-            line = line.split(delimiter);
 
             // If line's size is different of firstLineLength, it's an error
             if(line.length !== firstLineLength) {
@@ -184,6 +184,8 @@ export default class Utilities {
             // TODO use momentjs library to make this cast
             aux = new Date(val);
 
+            console.warn("Date should be in the following format: mm/dd/yyyy");
+
             // Check if val is a Date
             if(aux.getDate()) {
                 inferedValue = "Date";
@@ -217,7 +219,17 @@ export default class Utilities {
         });
     }
 
+    /**
+     * Split a {string} by a given {delimiter} and trim() every element
+     * @param string
+     * @param delimeter
+     * @returns {*}
+     */
     static split(string, delimeter) {
+
+        if(!delimeter) {
+            throw "{delimiter} is required!";
+        }
 
         let arr = string.split(delimeter);
 
@@ -227,6 +239,36 @@ export default class Utilities {
         });
 
         return arr;
+    }
+
+    /**
+     * Split an array of strings given a {delimiter}
+     * @param arr
+     * @param delimiter
+     * @returns {*|Array}
+     */
+    static splitAll(arr, delimiter) {
+
+        if(!delimiter) {
+            throw "{delimiter} is required!";
+        }
+
+        return arr.map((string) => {
+            return Utilities.split(string, delimiter);
+        });
+
+    }
+
+    /**
+     * Update all the select values with the new inferred values
+     * @param inferredValues
+     */
+    static updateSelectValues (inferredValues) {
+
+        $.each(inferredValues, function(index, val) {
+
+            $($('select')[index]).val(val);
+        });
     }
 
 }

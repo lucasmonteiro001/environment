@@ -4,3 +4,7 @@ tr {
 tr.error {
     outline: 0.5px solid red;
 }
+
+.cssRow {
+    float: left;
+}

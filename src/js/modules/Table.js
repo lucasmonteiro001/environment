@@ -35,7 +35,7 @@ export default class Table {
             let select = DOMElements.new("select", {id: `inferredValues-${index}`});
 
             // For each available option
-            $.each(datatypes, function(inner_index, val) {
+            $.each(datatypes, (i, val) => {
                 select.append(DOMElements.new("option", {text: val, value: val}));
             });
 
@@ -57,6 +57,9 @@ export default class Table {
 
     }
 
+    /**
+     * Draw a checkbox as the first row of the table
+     */
     static drawHierarchicalCheckbox () {
 
         let tbody = $("tbody"),
@@ -67,6 +70,87 @@ export default class Table {
         row.append(checkbox);
         row.append(text);
         tbody.append(row);
+    }
+
+    static writeInvalidRows (errors, content) {
+
+        let tbody = $('tbody');
+
+        // Print each invalid row (which contains an error)
+        errors.forEach(function(i) {
+
+            let val = content[i];
+
+            if(val === "" || val === []) {
+                return;
+            }
+
+            let newLine = DOMElements.new("tr", {class: "error"});
+
+            $.each(val, function(index, data) {
+
+                if(index === 0) {
+
+                    let lineNumberInCSV = DOMElements.new('span', {text: "[" + (i + 2) + "] ", class: 'cssRow'}),
+                        td = DOMElements.new('td', {text: data});
+
+                    newLine.append(td);
+
+                    td.prepend(lineNumberInCSV);
+                }
+                // imprime o numero da linha
+                else {
+
+                    newLine.append(DOMElements.new('td', {text: data}));
+                }
+            });
+
+            tbody.append(newLine);
+
+        });
+
+    }
+
+    static writeValidRows(errors, content) {
+
+        let tbody = $('tbody');
+
+        $.each(content, function(i, val) {
+
+            // if line does not contain an error
+            if(!errors.has(i)) {
+
+                if(val === "") {
+                    return;
+                }
+
+                let newLine = DOMElements.new('tr', {class: "right"});
+
+                // Print each element of the row
+                $.each(val, function(index, data) {
+
+                    if(index === 0) {
+
+                        let lineNumberInCSV = DOMElements.new('span', {text: "[" + (i + 2) + "] ", class: 'cssRow'}),
+                            td = DOMElements.new('td', {text: data});
+
+                        newLine.append(td);
+
+                        td.prepend(lineNumberInCSV);
+                    }
+                    // imprime o numero da linha
+                    else {
+
+                        newLine.append(DOMElements.new('td', {text: data}));
+                    }
+                });
+
+                tbody.append(newLine);
+            }
+
+        });
+
+
     }
 
 }

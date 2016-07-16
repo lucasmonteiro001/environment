@@ -7,6 +7,8 @@ import Table from './modules/Table';
 
 global.$ = global.jQuery = require('jquery');
 
+global.splitAll = Utilities.splitAll;
+
 global.inferredValues = [];
 global.hierarchicalObj = [];
 global.errors;
@@ -76,6 +78,19 @@ $(document).ready(() => {
 
                 // coloca um checkbox para opcao de dados hierarquicos
                 Table.drawHierarchicalCheckbox();
+
+                content = Utilities.splitAll(content, DefaultValues.DELIMITER);
+
+                let res = Utilities.getErrorsAndInferredValues(global.inferredValues, content);
+
+                global.errors = res.errors;
+                global.inferredValues = res.inferredValues;
+
+                Utilities.updateSelectValues(global.inferredValues);
+
+                Table.writeInvalidRows(global.errors, content);
+
+                Table.writeValidRows(global.errors, content);
 
                 return false;
 
@@ -161,25 +176,7 @@ $(document).ready(() => {
                         }
                     });
 
-                var res = utilities.getErrorsAndInferedValues(inferedValues, content, defaultValues.DELIMITER);
-
-                errors = res.errors;
-                inferedValues = res.inferedValues;
-
-                tbl.writeErrors(table, errors, content, defaultValues.DELIMITER);
-                tbl.writeDataButErrors(table, errors, content, defaultValues.DELIMITER);
-
-                // precisa de mudar o valor dos dropdowns com os novos valores inferidos
-                // seleciona o tipo inferido
-                $.each(inferedValues, function(index, val) {
-                    $($('select')[index]).val(val);
-                });
-
             };
-
-
         }
-
     });
-
 });
