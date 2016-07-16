@@ -5,11 +5,14 @@ import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import Dimension from  './base/Dimension';
+import VisualizationTechnique from  './base/VisualizationTechnique';
 
 let d = new Dimension('ola', 'temporal');
-console.log(d.dataType)
+let v = new VisualizationTechnique();
+v.dataSet = [d];
 
 console.log(d);
+console.log(v);
 
 global.$ = global.jQuery = require('jquery');
 
