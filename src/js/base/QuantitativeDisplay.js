@@ -1,9 +1,9 @@
 /**
  * Created by lucas on 7/16/16.
  */
-import VisualizationTechnique from './VisualizationTechnique'
+import VisualizationTechnique from './VisualizationTechnique';
 
-export  default class QuantitativeDisplay extends VisualizationTechnique {
+export default class QuantitativeDisplay extends VisualizationTechnique {
 
     properties() {
         this._x = null;
@@ -49,9 +49,6 @@ export  default class QuantitativeDisplay extends VisualizationTechnique {
     get y () {
         return this._y;
     }
-
-
-
 
     set ticksX (ticksX) {
 

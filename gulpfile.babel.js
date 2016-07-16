@@ -93,17 +93,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('js-bundle', () => {
-
-    bundle({
-        distPath: config.distPaths.js,
-        filePath: './src/js/main.js',
-        fileName: "main.js"});
-
-    bundle({
-        distPath: config.distPaths.js,
-        filePath: './src/js/test.js',
-        fileName: "test.js"});
-
+    
     bundle({
         distPath: config.distPaths.js,
         filePath: './src/js/vis.js',
