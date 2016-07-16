@@ -10,7 +10,9 @@ const gulp = require('gulp'),
     source = require('vinyl-source-stream'), // Use conventional text streams with Gulp
     concat = require('gulp-concat'), // Concatenates files
     lint = require('gulp-eslint'), // Lint JS files, including JSX
-    babel = require('gulp-babel');
+    babel = require('gulp-babel'),
+    uglify = require('gulp-uglify'),
+    minify = require('gulp-minify');
 
 const config = {
     port: 3000,
@@ -51,7 +53,6 @@ const bundle = (options) => {
 
     // If fileName is not an argument, get the name from filePath
     if(fileName === undefined) {
-        console.log("aqui")
         fileName = filePath.split('/');
         fileName = fileName[fileName.length - 1];
     }
@@ -64,6 +65,38 @@ const bundle = (options) => {
         .pipe(source(fileName))
         .pipe(gulp.dest(distPath));
 
+    // Generate minified file if required
+    if(options.uglify === true) {
+
+        gulp.src(config.distPaths.js + fileName)
+            .pipe(minify({
+                ext:{
+                    min:'.min.js'
+                },
+                mangle: false,
+                compress: {
+                    sequences     : true,  // join consecutive statemets with the “comma operator”
+                    properties    : true,  // optimize property access: a["foo"] → a.foo
+                    dead_code     : true,  // discard unreachable code
+                    drop_debugger : true,  // discard “debugger” statements
+                    unsafe        : false, // some unsafe optimizations (see below)
+                    conditionals  : true,  // optimize if-s and conditional expressions
+                    comparisons   : true,  // optimize comparisons
+                    evaluate      : true,  // evaluate constant expressions
+                    booleans      : true,  // optimize boolean expressions
+                    loops         : true,  // optimize loops
+                    unused        : true,  // drop unused variables/functions
+                    hoist_funs    : true,  // hoist function declarations
+                    hoist_vars    : false, // hoist variable declarations
+                    if_return     : true,  // optimize if-s followed by return/continue
+                    join_vars     : true,  // join var declarations
+                    cascade       : true,  // try to cascade `right` into `left` in sequences
+                    side_effects  : true,  // drop side-effect-free statements
+                    warnings      : true  // warn about potentially dangerous optimizations/code
+                }
+            }))
+            .pipe(gulp.dest(config.distPaths.js));
+    }
 };
 
 // Starts a local development server
@@ -93,11 +126,12 @@ gulp.task('html', () => {
 });
 
 gulp.task('js-bundle', () => {
-    
+
     bundle({
         distPath: config.distPaths.js,
         filePath: './src/js/vis.js',
-        fileName: "vis.js"});
+        fileName: "vis.js",
+        uglify: true});
 });
 
 gulp.task('css-bundle', () => {
