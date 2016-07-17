@@ -4,31 +4,13 @@
 import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
-import Dimension from  './base/Dimension';
-import VisualizationTechnique from  './base/VisualizationTechnique';
-import QuantitativeDisplay from  './base/QuantitativeDisplay';
-
-let d = new Dimension('ola', 'temporal');
-let v = new VisualizationTechnique();
-v.dataSet = [d];
-
-console.log(d);
-console.log(v);
-
-
-let q = new QuantitativeDisplay();
-
-console.log(q)
+import DataSet from './base/DataSet';
 
 global.$ = global.jQuery = require('jquery');
 
-global.splitAll = Utilities.splitAll;
-
-global.inferredValues = [];
 global.hierarchicalObj = [];
-global.errors = null;
-global.header = null;
-global.content = null;
+
+let dataSet = null;
 
 $(document).ready(() => {
 
@@ -42,7 +24,7 @@ $(document).ready(() => {
                 index = id.split("-")[1];
 
             // Update inferredValues with new selected value from select menu
-            global.inferredValues[index] = select.value;
+            dataSet.inferredValues[index] = select.value;
 
             $('.hierarchicalRow').remove();
             $('.isHierarchical').find('[type="checkbox"]')[0].checked = false;
@@ -136,64 +118,51 @@ $(document).ready(() => {
 
             $(thead).empty();
             $(tbody).empty();
-            global.inferredValues = [];
 
             // Object to read from file
-            let reader = new FileReader();
+            let reader = new FileReader(),
+                file = e.target.files.item(0);
 
-            reader.readAsText(e.target.files.item(0));
+            reader.readAsText(file);
 
             // After loading the file
             reader.onload = (evt) => {
 
-                // obtem o array com as linhas do csv
+                // Get lines from csv
                 let csvval = evt.target.result.split("\n"),
-                    header = csvval[0];
+                    header = Utilities.split(csvval[0], DefaultValues.DELIMITER);
 
                 if(!Utilities.isLessThan(header, DefaultValues.MAX_COLS, DefaultValues.DELIMITER)) {
                     alert('File\'s columns should not exceed 10! ');
                     return false;
                 }
 
-                global.header = Utilities.split(header, DefaultValues.DELIMITER);
+                dataSet = new DataSet(file.name, file.type);
+                
+                // TODO Check if global variable below is needed
+                global.dataSet = dataSet;
 
-                // Get all lines but header
-                global.content = csvval.slice(1, csvval.length);
+                dataSet.rows = csvval.length;
+                dataSet.rowData = Utilities.splitAll(csvval, DefaultValues.DELIMITER);
+                dataSet.columns = header.length;
 
                 // Free up space
                 csvval = null;
 
-                // Get first line of content from csv file
-                var firstLine = global.content[0];
-
-                if(firstLine) {
-
-                    let line = firstLine.split(DefaultValues.DELIMITER);
-
-                    // Infer values from first line
-                    global.inferredValues = Utilities.inferValues(line);
-                } else {
-
-                    return false;
-                }
-
-                Table.writeInferredValues(global.inferredValues, table, global.header, DefaultValues.DATA_TYPES);
+                Table.writeInferredValues(dataSet.inferredValues, table, dataSet.header, DefaultValues.DATA_TYPES);
 
                 // coloca um checkbox para opcao de dados hierarquicos
                 Table.drawHierarchicalCheckbox();
 
-                global.content = Utilities.splitAll(global.content, DefaultValues.DELIMITER);
+                let res = Utilities.getErrorsAndInferredValues(dataSet.inferredValues, dataSet.data);
 
-                let res = Utilities.getErrorsAndInferredValues(global.inferredValues, global.content);
+                dataSet.inferredValues = res.inferredValues;
 
-                global.errors = res.errors;
-                global.inferredValues = res.inferredValues;
+                Utilities.updateSelectValues(dataSet.inferredValues);
 
-                Utilities.updateSelectValues(global.inferredValues);
+                Table.writeInvalidRows(res.errors, dataSet.data);
 
-                Table.writeInvalidRows(global.errors, global.content);
-
-                Table.writeValidRows(global.errors, global.content);
+                Table.writeValidRows(res.errors, dataSet.data);
 
                 monitorEvents();
 
