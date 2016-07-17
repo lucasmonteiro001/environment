@@ -9,6 +9,7 @@ export default class DataSet {
     properties() {
 
         this._rowData = null;
+        this._rawRowData = null;
         this._rows = null;
         this._columns = null;
         this._format = null;
@@ -26,6 +27,11 @@ export default class DataSet {
         this.format = format;
         this.path = path;
 
+    }
+    
+    get toJSON() {
+        
+        return Utilites.csvToJSON(this.header, this.data);
     }
 
     get dimensions() {
@@ -81,6 +87,16 @@ export default class DataSet {
     get header() {
 
         return this.rowData[0];
+    }
+
+    get rawRowData() {
+
+        return this._rawRowData;
+    }
+
+    set rawRowData(rawRowData) {
+
+        this._rawRowData = rawRowData;
     }
 
     get rowData() {

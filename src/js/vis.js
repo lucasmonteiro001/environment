@@ -138,10 +138,11 @@ $(document).ready(() => {
                 }
 
                 dataSet = new DataSet(file.name, file.type);
-                
+
                 // TODO Check if global variable below is needed
                 global.dataSet = dataSet;
 
+                dataSet.rawRowData = evt.target.result;
                 dataSet.rows = csvval.length;
                 dataSet.rowData = Utilities.splitAll(csvval, DefaultValues.DELIMITER);
                 dataSet.columns = header.length;
