@@ -117,6 +117,10 @@ export default class DataSet {
 
     }
 
+    /**
+     * 
+     * @param inferredValues
+     */
     set inferredValues(inferredValues) {
 
         this._inferredValues = inferredValues;

@@ -12,7 +12,8 @@ const gulp = require('gulp'),
     lint = require('gulp-eslint'), // Lint JS files, including JSX
     babel = require('gulp-babel'),
     uglify = require('gulp-uglify'),
-    minify = require('gulp-minify');
+    minify = require('gulp-minify'),
+    esdoc = require("gulp-esdoc");
 
 const config = {
     port: 3000,
@@ -98,6 +99,12 @@ const bundle = (options) => {
             .pipe(gulp.dest(config.distPaths.js));
     }
 };
+
+
+gulp.task('doc', function (cb) {
+    gulp.src("./src")
+        .pipe(esdoc({ destination: "./docs" }));
+});
 
 // Starts a local development server
 gulp.task('connect', () => {
