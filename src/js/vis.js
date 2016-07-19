@@ -7,9 +7,8 @@ import Table from './modules/Table';
 import DataSet from './base/DataSet';
 import VisualizationTechnique from './base/VisualizationTechnique';
 
-
-
 global.$ = global.jQuery = require('jquery');
+global.d3 = require('d3');
 
 global.hierarchicalObj = [];
 
