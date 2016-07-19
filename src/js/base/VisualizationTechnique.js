@@ -2,7 +2,18 @@
  * Created by lucas on 7/16/16.
  */
 
+/**
+ * This is the id given to a Visualization Technique when it is first instantiated
+ * @type {number}
+ */
 let ID_COUNTER = 0;
+
+/**
+ * The following conventions were extracted from https://bl.ocks.org/mbostock/3019563
+ */
+const MARGIN_CONVENTION_D3 = {top: 20, right: 10, bottom: 20, left: 10},
+    WIDTH_CONVENTION_D3 = 960 - MARGIN_CONVENTION_D3.left - MARGIN_CONVENTION_D3.right,
+    HEIGHT_CONVENTION_D3 = 500 - MARGIN_CONVENTION_D3.top - MARGIN_CONVENTION_D3.bottom;
 
 export default class VisualizationTechnique {
 
@@ -16,12 +27,12 @@ export default class VisualizationTechnique {
 
         this._container = null;
         this._dataSet = null;
-        this._width = null;
-        this._height = null;
-        this._marginTop = null;
-        this._marginRight = null;
-        this._marginBottom = null;
-        this._marginLeft = null;
+        this._width = WIDTH_CONVENTION_D3;
+        this._height = HEIGHT_CONVENTION_D3;
+        this._marginTop = MARGIN_CONVENTION_D3.top;
+        this._marginRight = MARGIN_CONVENTION_D3.right;
+        this._marginBottom = MARGIN_CONVENTION_D3.bottom;
+        this._marginLeft = MARGIN_CONVENTION_D3.left;
         this._svg = null;
     }
 
