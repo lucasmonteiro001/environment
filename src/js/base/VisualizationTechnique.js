@@ -26,7 +26,7 @@ export default class VisualizationTechnique {
         ID_COUNTER = ID_COUNTER + 1;
 
         this._container = null;
-        this._dataSet = null;
+        this._dimension = null;
         this._width = WIDTH_CONVENTION_D3;
         this._height = HEIGHT_CONVENTION_D3;
         this._marginTop = MARGIN_CONVENTION_D3.top;
@@ -192,27 +192,27 @@ export default class VisualizationTechnique {
 
     /**
      *
-     * @param dataSet must be an array of Dimension
+     * @param dimension must be an array of Dimension
      */
-    set dataSet(dataSet) {
+    set dimension(dimension) {
 
-        if(!Array.isArray(dataSet)) {
-            throw "{dataSet} must be an array!";
+        if(!Array.isArray(dimension)) {
+            throw "{dimension} must be an array!";
         }
 
         // Check if elements in {dataSet} are Dimension objects
-        dataSet.forEach((el) => {
+        dimension.forEach((el) => {
             // Throw exception if element does not belong to class Dimension
             if(el.constructor.name !== "Dimension") {
                 throw "Every dataSet's object should have the Dimension Class";
             }
         });
 
-        this._dataSet = dataSet;
+        this._dimension = dimension;
     }
 
-    get dataSet () {
-        return this._dataSet;
+    get dimension () {
+        return this._dimension;
     }
 
     update () {
