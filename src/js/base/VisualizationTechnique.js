@@ -50,6 +50,7 @@ export default class VisualizationTechnique {
     constructor(container = "", dataSet = []) {
 
         this.properties();
+
         this.container = container;
         this.dataSet = dataSet;
 
@@ -64,8 +65,27 @@ export default class VisualizationTechnique {
         return this._id;
     }
 
+    /**
+     * Container should be a valid location.
+     * Possible values: [body, id, class]
+     * id should start with # and class with dot (.)
+     * @param container
+     */
     set container (container) {
-        this._container = container.toString().trim();
+
+        container = container.toString().trim();
+
+        if(container !== "body") {
+            if(container[0] !== "#" && container[0] !== ".") {
+                if(container.length < 2) {
+                    throw "Container should be either body, or a element starting with # or .";
+                }
+            }
+        }
+
+        console.warn("jQuery element selection not supported yet for container binding!");
+
+        this._container = container;
     }
 
     get container () {

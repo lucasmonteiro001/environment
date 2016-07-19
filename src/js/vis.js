@@ -7,8 +7,8 @@ import Table from './modules/Table';
 import DataSet from './base/DataSet';
 import VisualizationTechnique from './base/VisualizationTechnique';
 
-console.log(new VisualizationTechnique());
-console.log(new VisualizationTechnique());
+console.log(VisualizationTechnique)
+console.log(new VisualizationTechnique("body", ""));
 
 global.$ = global.jQuery = require('jquery');
 
