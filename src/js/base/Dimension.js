@@ -5,7 +5,16 @@ import DataType from './DataType';
 
 export default class Dimension {
 
+    properties() {
+
+        this._data = null;
+        this._dataType = null;
+
+    }
+
     constructor (data = "", dataType = "") {
+
+        this.properties();
 
         if(data === "" || dataType === "") {
             throw "{data} and {dataType} are required";

@@ -5,6 +5,10 @@ import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import DataSet from './base/DataSet';
+import VisualizationTechnique from './base/VisualizationTechnique';
+
+console.log(new VisualizationTechnique());
+console.log(new VisualizationTechnique());
 
 global.$ = global.jQuery = require('jquery');
 

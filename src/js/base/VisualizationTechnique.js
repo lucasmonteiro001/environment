@@ -1,6 +1,9 @@
 /**
  * Created by lucas on 7/16/16.
  */
+
+let ID_COUNTER = 0;
+
 export default class VisualizationTechnique {
 
     /**
@@ -8,9 +11,11 @@ export default class VisualizationTechnique {
      */
     properties() {
 
-        this._id = null;
-        this._id = null;
+        this._id = VisualizationTechnique.nextId; // should be automatically generated
+        ID_COUNTER = ID_COUNTER + 1;
+
         this._container = null;
+        this._dataSet = null;
         this._width = null;
         this._height = null;
         this._marginTop = null;
@@ -18,10 +23,13 @@ export default class VisualizationTechnique {
         this._marginBottom = null;
         this._marginLeft = null;
         this._svg = null;
-        this._container = null;
-        this._dataSet = null;
     }
 
+    static get nextId() {
+
+        return ID_COUNTER + 1;
+
+    }
 
     /**
      *
@@ -36,8 +44,9 @@ export default class VisualizationTechnique {
 
     }
 
-    set id( id) {
-        this._id = id.toString().trim();
+    set id(id) {
+        throw "Setting up new id is not supported!";
+        // this._id = id.toString().trim();
     }
 
     get id () {
