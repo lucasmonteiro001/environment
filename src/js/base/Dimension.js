@@ -46,7 +46,7 @@ export default class Dimension {
     }
 
     count () {
-        throw "Unsupported operation!";
+        console.warn("Should be implemented using the groupBy function by d3.js");
     }
 
     max () {
@@ -58,27 +58,51 @@ export default class Dimension {
     }
 
     sum () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
     mean () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
     median () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
     quantile () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
     variance () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
     deviation () {
-        throw "Unsupported operation!";
+        if(this.dataType !== "quantitative") {
+            throw `Unsupported operation for dataType:{${this.dataType}}`;
+        }
+
+        console.warn("TBD");
     }
 
 

@@ -5,6 +5,9 @@ import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import DataSet from './base/DataSet';
+import Dimension from './base/Dimension'
+
+console.log(Dimension)
 
 global.$ = global.jQuery = require('jquery');
 global.d3 = require('d3');
