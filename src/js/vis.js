@@ -16,6 +16,8 @@ global.hierarchicalObj = [];
 
 let dataSet = null;
 
+global.dataSet = dataSet;
+
 $(document).ready(() => {
 
     const monitorEvents = () => {
