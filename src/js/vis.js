@@ -6,11 +6,10 @@ import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import DataSet from './base/DataSet';
 import Dimension from './base/Dimension';
-import VisualizationTechinique from './base/VisualizationTechnique';
 import HorizontalBar from './base/HorizontalBar';
+import BarChart from './base/BarChart';
 
-// console.log(VisualizationTechinique)
-console.log(HorizontalBar);
+const d3 = require('d3');
 
 let familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
 
@@ -20,11 +19,30 @@ familyMembers = familyMembers.map(function(member, i) {
 
 
 global.$ = global.jQuery = require('jquery');
-global.d3 = require('d3');
+
 global.hierarchicalObj = [];
 
+
 $(document).ready(function () {
-    let x =  new HorizontalBar("#container-visualizacao", familyMembers);
+
+
+    let barras =  new HorizontalBar("#container-visualizacao", familyMembers);
+
+    global.ordenaValueDSC = function ordenaValueDSC() { barras.sort("valueDSC"); }
+    global.ordenaValueASC = function ordenaValueASC() { barras.sort("valueASC"); }
+    global.ordenaNameDSC = function ordenaNameDSC() {	barras.sort("nameDSC");	}
+    global.ordenaNameASC =  function ordenaNameASC() {	barras.sort("nameASC");	}
+
+    // d3.interval(function () {
+    //
+    //     familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
+    //     familyMembers = familyMembers.map(function(member, i) {
+    //         return {key: member, value: Math.floor(Math.random() * (10 - 0)) + 0};
+    //     });
+    //
+    //     x.update(familyMembers);
+    //
+    // }, 1500);
 });
 
 let dataSet = null;

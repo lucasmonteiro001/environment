@@ -7,7 +7,7 @@ const d3 = require('d3');
 const WIDTH = 640;
 const HEIGHT = 480;
 
-export default class HorizontalBar extends VisualizationTechnique {
+export default class BarChart extends VisualizationTechnique {
 
     properties () {
 
@@ -38,20 +38,16 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._svg = this._svgMargin.append("g")
             .attr("class", "display");
 
-        this._x = d3.scaleLinear()
-            .range([0, this._width]);
+        this._y = d3.scaleLinear()
+            .range([this._height, 0]);
 
-        this._y = d3.scaleBand()
+        this._x = d3.scaleBand()
             .padding(.3)
-            .rangeRound([0, this._height]);
+            .rangeRound([0, this._width]);
 
-        this._xAxis = d3.axisTop(this._x)
-            .ticks(4)
-            .tickSize(-this._height);
+        this._xAxis = d3.axisBottom(this._x);
 
-        this._yAxis = d3.axisLeft(this._y)
-            .ticks(0)
-            .tickSize(0);
+        this._yAxis = d3.axisLeft(this._y);
 
         this._xAxisContainer = this._svgMargin.append("g")
             .attr("class", "x axis");
@@ -183,33 +179,33 @@ export default class HorizontalBar extends VisualizationTechnique {
     sort (value) {
         //FIXME
         let t = d3.transition().duration(750),
-            delay = (d, i) => i * 50;
+            delay = function(d, i) { return i * 50; };
 
 
         switch(value) {
 
             case "nameASC":
-                this._data.sort( (a, b) => d3.ascending(a.key, b.key) );
+                this._data.sort(function(a, b) { return d3.ascending(a.key, b.key); });
                 break;
 
             case "nameDSC":
-                this._data.sort( (a, b) => d3.descending(a.key, b.key) );
+                this._data.sort(function(a, b) { return d3.descending(a.key, b.key); });
                 break;
 
             case "valueASC":
-                this._data.sort( (a, b) => a.value - b.value );
+                this._data.sort(function(a, b) { return a.value - b.value; });
                 break;
 
             case "valueDSC":
-                this._data.sort( (a, b) => b.value - a.value );
+                this._data.sort(function(a, b) { return b.value - a.value; });
                 break;
 
             case "groupASC":
-                this._data.sort( (a, b) => d3.ascending(a.group, b.group) );
+                this._data.sort(function(a, b) { return d3.ascending(a.group, b.group); });
                 break;
 
             case "groupDSC":
-                this._data.sort( (a, b) => d3.descending(a.group, b.group) );
+                this._data.sort(function(a, b) { return d3.descending(a.group, b.group); });
                 break;
 
             default:
@@ -217,7 +213,8 @@ export default class HorizontalBar extends VisualizationTechnique {
         }
 
 
-        let y0 = this._y.domain(this._data.map(d => d.key)).copy();
+        let y0 = this._y.domain(this._data.map(d => d.key))
+            .copy();
 
         this._svg.transition(t).selectAll(".bar")
             .delay(delay)
@@ -233,7 +230,7 @@ export default class HorizontalBar extends VisualizationTechnique {
 
         // TODO t sera chamado de transition e mudar para VisualizationTechnique
         let t = d3.transition().duration(750),
-            delay = (d, i) => i * 50;
+            delay = function(d, i) { return i * 50; };
 
         this.data(data);
 
@@ -245,12 +242,12 @@ export default class HorizontalBar extends VisualizationTechnique {
         // Remove old elements as needed.
         bar.exit().attr("class", "exit")
             .transition(t)
-            .attr("x", (this.width() / 4))
+            .attr("y", (this._height / 2))
             .style("fill-opacity", "#CCCCCC")
             .style("fill-opacity", 1e-6)
             .remove();
 
-        this._margin.left = this.longestLabelSize(data.map(function(d) { return d.key; }));
+        // this._margin.left = this.longestLabelSize(data.map(function(d) { return d.key; }));
         this._width = WIDTH - this._margin.left - this._margin.right;
         this._height = HEIGHT - this._margin.top - this._margin.bottom;
 
@@ -260,31 +257,31 @@ export default class HorizontalBar extends VisualizationTechnique {
 
         this._svgMargin.attr("transform", "translate(" + (this._margin.left) + "," + (this._margin.top) + ")");
 
-        this._x.range([0, this._width])
-            .domain([0, d3.max(this._data, function(d) { return d.value; })]).nice();
-
-        this._y.rangeRound([0, this._height])
+        this._x.rangeRound([0, this._width])
             .domain(this._data.map(function(d){ return d.key; }));
+
+        this._y.range([this._height, 0])
+            .domain([0, d3.max(this._data, function(d) { return d.value; })]);
 
         this._color.domain(this._data.map(function(d) { return d.group || null; }));
 
         // UPDATE old elements present in new data.
-        bar.attr("height", this._y.bandwidth()).transition(t)
-            .attr("width", (function(d) { return  this._x(d.value); }).bind(this))
-            .attr("y", (function(d) { return this._y(d.key); }).bind(this))
+        bar.attr("height", function(d) {return this._height - this._y(d.value)}).transition(t)
+            .attr("width", (function(d) { return  this._x.bandwidth() }).bind(this))
+            .attr("y", (function(d) { return this._y(d.value); }).bind(this))
             .style("fill", (function(d) { return (d.group) ? this._color(d.group) : this._defaultColor; }).bind(this));
 
         // ENTER new elements present in new data.
         bar.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("height", this._y.bandwidth())
-            .attr("width", 0)
-            .attr("y", (function(d) { return this._y(d.key); }).bind(this))
+            .attr("height", function(d) { return this._height - this._y(d.value)})
+            .attr("width", this._x.bandwidth())
+            .attr("y", (function(d) { return this._y(d.value)}).bind(this))
             .style("fill", (function(d) { return (d.group) ? this._color(d.group) : this._defaultColor; }).bind(this))
             .transition(t).delay(delay)
-            .attr("x", 0)
-            .attr("width", (function(d) { return  this._x(d.value); }).bind(this));
+            .attr("x", function(d) { return this.x(d.key)})
+            .attr("width", (function(d) { return  this._x.bandwidth(); }).bind(this));
 
         this._xAxisContainer.transition(t)
             .call(this._xAxis);

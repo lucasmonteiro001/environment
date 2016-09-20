@@ -14,7 +14,45 @@
 </head>
 <body>
 
-<div id='container-visualizacao'> </div>
+
+<div class="panel panel-success">
+
+    <div class="panel-body">
+
+        <div id='container-visualizacao'> </div>
+    </div>
+
+    <div class="panel-footer">
+
+
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary"> Nome Crescente
+                <input type="radio" name="order-options" autocomplete="off" value="nameASC" onchange="ordenaNameASC()" />
+            </label>
+        </div>
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary"> Nome Decrescente
+                <input type="radio" name="order-options" autocomplete="off" value="nameDSC" onchange="ordenaNameDSC()" />
+            </label>
+        </div>
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary"> Valor Crescente
+                <input type="radio" name="order-options" autocomplete="off" value="valueASC" onchange="ordenaValueASC()" />
+            </label>
+        </div>
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary active"> Valor Decrescente
+                <input type="radio" name="order-options" autocomplete="off" value="valueDSC" onchange="ordenaValueDSC()" />
+            </label>
+        </div>
+
+    </div>
+
+</div>
 
 <div class="container">
     <div class="row">
