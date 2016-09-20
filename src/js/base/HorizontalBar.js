@@ -62,7 +62,7 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._pallete = ['#EFB605', '#E79B01', '#E35B0F', '#DD092D', '#C50046', '#A70A61', '#892E83',
             '#604BA2', '#2D6AA6', '#089384', '#25AE64', '#7EB852', '#404040'];
 
-        this._pallete.sort(function(a, b) { return d3.hsl(b).h - d3.hsl(a).h; });
+        this._pallete.sort( (a, b) => d3.hsl(b).h - d3.hsl(a).h );
 
         this._defaultColor = "#45B6C5";
 
@@ -217,7 +217,8 @@ export default class HorizontalBar extends VisualizationTechnique {
         }
 
 
-        let y0 = this._y.domain(this._data.map(d => d.key)).copy();
+        let y0 = this._y.domain(this._data.map(d => d.key))
+            .copy();
 
         this._svg.transition(t).selectAll(".bar")
             .delay(delay)
@@ -235,7 +236,7 @@ export default class HorizontalBar extends VisualizationTechnique {
         let t = d3.transition().duration(750),
             delay = (d, i) => i * 50;
 
-        this.data(data);
+        this._data = data;
 
         // JOIN new data with old elements.
         let bar = this.svg().selectAll(".bar")
@@ -245,12 +246,12 @@ export default class HorizontalBar extends VisualizationTechnique {
         // Remove old elements as needed.
         bar.exit().attr("class", "exit")
             .transition(t)
-            .attr("x", (this.width() / 4))
+            .attr("x", (this._width / 4))
             .style("fill-opacity", "#CCCCCC")
             .style("fill-opacity", 1e-6)
             .remove();
 
-        this._margin.left = this.longestLabelSize(data.map(function(d) { return d.key; }));
+        this._margin.left = this.longestLabelSize(data.map( d => d.key));
         this._width = WIDTH - this._margin.left - this._margin.right;
         this._height = HEIGHT - this._margin.top - this._margin.bottom;
 
@@ -261,18 +262,20 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._svgMargin.attr("transform", "translate(" + (this._margin.left) + "," + (this._margin.top) + ")");
 
         this._x.range([0, this._width])
-            .domain([0, d3.max(this._data, function(d) { return d.value; })]).nice();
+            .domain([0, d3.max(this._data, d => d.value)])
+            .nice();
 
         this._y.rangeRound([0, this._height])
-            .domain(this._data.map(function(d){ return d.key; }));
+            .domain(this._data.map(d => d.key));
 
-        this._color.domain(this._data.map(function(d) { return d.group || null; }));
+        this._color.domain(this._data.map(d => d.group || null));
 
         // UPDATE old elements present in new data.
-        bar.attr("height", this._y.bandwidth()).transition(t)
-            .attr("width", (function(d) { return  this._x(d.value); }).bind(this))
-            .attr("y", (function(d) { return this._y(d.key); }).bind(this))
-            .style("fill", (function(d) { return (d.group) ? this._color(d.group) : this._defaultColor; }).bind(this));
+        bar.attr("height", this._y.bandwidth())
+            .transition(t)
+            .attr("width", d => this._x(d.value))
+            .attr("y", d => this._y(d.key))
+            .style("fill", d => (d.group) ? this._color(d.group) : this._defaultColor);
 
         // ENTER new elements present in new data.
         bar.enter()
@@ -280,11 +283,11 @@ export default class HorizontalBar extends VisualizationTechnique {
             .attr("class", "bar")
             .attr("height", this._y.bandwidth())
             .attr("width", 0)
-            .attr("y", (function(d) { return this._y(d.key); }).bind(this))
-            .style("fill", (function(d) { return (d.group) ? this._color(d.group) : this._defaultColor; }).bind(this))
+            .attr("y", d => this._y(d.key) )
+            .style("fill", d => (d.group) ? this._color(d.group) : this._defaultColor)
             .transition(t).delay(delay)
             .attr("x", 0)
-            .attr("width", (function(d) { return  this._x(d.value); }).bind(this));
+            .attr("width", d => this._x(d.value) );
 
         this._xAxisContainer.transition(t)
             .call(this._xAxis);

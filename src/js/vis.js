@@ -14,7 +14,7 @@ const d3 = require('d3');
 let familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
 
 familyMembers = familyMembers.map(function(member, i) {
-    return {key: member, value: i};
+    return {key: member, value: i + 1};
 });
 
 
