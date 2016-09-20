@@ -26,7 +26,7 @@ export default class VisualizationTechnique {
         ID_COUNTER = ID_COUNTER + 1;
 
         this._container = null;
-        this._dimension = null;
+        this._data = null;
         this._width = WIDTH_CONVENTION_D3;
         this._height = HEIGHT_CONVENTION_D3;
         this._marginTop = MARGIN_CONVENTION_D3.top;
@@ -34,6 +34,11 @@ export default class VisualizationTechnique {
         this._marginBottom = MARGIN_CONVENTION_D3.bottom;
         this._marginLeft = MARGIN_CONVENTION_D3.left;
         this._svg = null;
+        this._svgCanvas = null;
+        this._svgMargin = null;
+        this._pallete = null;
+        this._defaultColor = null;
+        this._color = null;
     }
 
     static get nextId() {
@@ -45,24 +50,24 @@ export default class VisualizationTechnique {
     /**
      *
      * @param container is a string
-     * @param dataSet is an array of Dimension
+     * @param data is an array of Dimension
      */
-    constructor(container = "", dataSet = []) {
+    constructor(container = "", data = []) {
 
         this.properties();
 
         this.container = container;
-        this.dataSet = dataSet;
+        this.data(data);
 
     }
 
-    set id(id) {
+    id(id) {
+
+        if (!arguments.length) {
+            return this._id;
+        }
+
         throw "Setting up new id is not supported!";
-        // this._id = id.toString().trim();
-    }
-
-    get id () {
-        return this._id;
     }
 
     /**
@@ -71,7 +76,11 @@ export default class VisualizationTechnique {
      * id should start with # and class with dot (.)
      * @param container
      */
-    set container (container) {
+    container (container) {
+
+        if (!arguments.length) {
+            return this._container;
+        }
 
         container = container.toString().trim();
 
@@ -88,11 +97,56 @@ export default class VisualizationTechnique {
         this._container = container;
     }
 
-    get container () {
-        return this._container;
+    svgCanvas (svgCanvas) {
+
+        if (!arguments.length) {
+            return this._svgCanvas;
+        }
+
+        this._svgCanvas = svgCanvas;
     }
 
-    set width (width) {
+    svgMargin (svgMargin) {
+
+        if (!arguments.length) {
+            return this._svgMargin;
+        }
+
+        this._svgMargin = svgMargin;
+    }
+
+    pallete (pallete) {
+
+        if (!arguments.length) {
+            return this._pallete;
+        }
+
+        this._pallete = pallete;
+    }
+
+    defaultColor (defaultColor) {
+
+        if (!arguments.length) {
+            return this._defaultColor;
+        }
+
+        this._defaultColor = defaultColor;
+    }
+
+    color (color) {
+
+        if (!arguments.length) {
+            return this._color;
+        }
+
+        this._color = color;
+    }
+
+    width (width) {
+
+        if (!arguments.length) {
+            return this._width;
+        }
 
         width = parseInt(width);
 
@@ -103,11 +157,11 @@ export default class VisualizationTechnique {
         this._width = width;
     }
 
-    get width () {
-        return this._width;
-    }
+    height(height) {
 
-    set height(height) {
+        if (!arguments.length) {
+            return this._height;
+        }
 
         height = parseInt(height);
 
@@ -118,11 +172,11 @@ export default class VisualizationTechnique {
         this._height = height;
     }
 
-    get height () {
-        return this._height;
-    }
+    marginTop (marginTop) {
 
-    set marginTop(marginTop) {
+        if (!arguments.length) {
+            return this._marginTop;
+        }
 
         marginTop = parseInt(marginTop);
 
@@ -133,11 +187,11 @@ export default class VisualizationTechnique {
         this._marginTop = marginTop;
     }
 
-    get marginTop () {
-        return this._marginTop;
-    }
+    marginRight(marginRight) {
 
-    set marginRight(marginRight) {
+        if (!arguments.length) {
+            return this._marginRight;
+        }
 
         marginRight = parseInt(marginRight);
 
@@ -148,11 +202,11 @@ export default class VisualizationTechnique {
         this._marginRight = marginRight;
     }
 
-    get marginRight () {
-        return this._marginRight;
-    }
+    marginBottom(marginBottom) {
 
-    set marginBottom(marginBottom) {
+        if (!arguments.length) {
+            return this._marginBottom;
+        }
 
         marginBottom = parseInt(marginBottom);
 
@@ -163,11 +217,11 @@ export default class VisualizationTechnique {
         this._marginBottom = marginBottom;
     }
 
-    get marginBottom () {
-        return this._marginBottom;
-    }
+    marginLeft (marginLeft) {
 
-    set marginLeft(marginLeft) {
+        if (!arguments.length) {
+            return this._marginLeft;
+        }
 
         marginLeft = parseInt(marginLeft);
 
@@ -178,41 +232,38 @@ export default class VisualizationTechnique {
         this._marginLeft = marginLeft;
     }
 
-    get marginLeft () {
-        return this._marginLeft;
-    }
+    svg (svg) {
 
-    set svg(svg) {
-        this._svg = svg.toString().trim();
-    }
+        if (!arguments.length) {
+            return this._svg;
+        }
 
-    get svg () {
-        return this._svg;
+        this._svg = svg;
     }
 
     /**
      *
-     * @param dimension must be an array of Dimension
+     * @param data must be an array of Dimension
      */
-    set dimension(dimension) {
+    data (data) {
 
-        if(!Array.isArray(dimension)) {
-            throw "{dimension} must be an array!";
+        if (!arguments.length) {
+            return this._data;
         }
 
-        // Check if elements in {dataSet} are Dimension objects
-        dimension.forEach((el) => {
-            // Throw exception if element does not belong to class Dimension
-            if(el.constructor.name !== "Dimension") {
-                throw "Every dataSet's object should have the Dimension Class";
-            }
-        });
+        if(!Array.isArray(data)) {
+            throw "{data} must be an array!";
+        }
 
-        this._dimension = dimension;
-    }
+        // // Check if elements in {dataSet} are Dimension objects
+        // data.forEach((el) => {
+        //     // Throw exception if element does not belong to class Dimension
+        //     if(el.constructor.name !== "Dimension") {
+        //         throw "Every dataSet's object should have the Dimension Class";
+        //     }
+        // });
 
-    get dimension () {
-        return this._dimension;
+        this._data = data;
     }
 
     update () {

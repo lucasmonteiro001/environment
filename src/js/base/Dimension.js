@@ -20,6 +20,8 @@ export default class Dimension {
             throw "{data} and {dataType} are required";
         }
 
+        // TODO fazer o type cast dos valores do data para o dataType
+
         this.data = data;
         this.dataType = dataType;
     }

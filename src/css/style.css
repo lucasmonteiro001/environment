@@ -1,3 +1,9 @@
+#container-visualizacao {
+    margin: 0 auto;
+    width: 640px;
+    height: 480px;
+}
+
 tr {
     text-align: center;
 }
@@ -14,3 +20,37 @@ tr.error {
     height: 2em;
     font-weight: 600;
 }
+
+rect { shape-rendering: crispEdges; }
+
+.x.axis line {
+    stroke: #FFF;
+    stroke-opacity: .8;
+    stroke-width: 1.5px;
+    shape-rendering: crispEdges;
+}
+
+.axis path {
+    fill: none;
+    stroke: none;
+}
+
+.x.axis.tick:first-child > line {
+    fill: red;
+}
+
+.x.axis text {
+    fill: #4F4F4F;
+    font-size: 14px;
+    font-family: "Georgia", serif;
+}
+
+
+.y.axis text {
+    fill: #4F4F4F;
+    font-size: 12px;
+    font-family: "Open Sans",Helvetica, sans-serif;
+    text-rendering: optmizelegibility;
+}
+
+.exit { fill: #CCCCCC; }

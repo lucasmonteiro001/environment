@@ -5,14 +5,27 @@ import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import DataSet from './base/DataSet';
-import Dimension from './base/Dimension'
+import Dimension from './base/Dimension';
+import VisualizationTechinique from './base/VisualizationTechnique';
+import HorizontalBar from './base/HorizontalBar';
 
-console.log(Dimension)
+// console.log(VisualizationTechinique)
+console.log(HorizontalBar);
+
+let familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
+
+familyMembers = familyMembers.map(function(member, i) {
+    return {key: member, value: i};
+});
+
 
 global.$ = global.jQuery = require('jquery');
 global.d3 = require('d3');
-
 global.hierarchicalObj = [];
+
+$(document).ready(function () {
+    let x =  new HorizontalBar("#container-visualizacao", familyMembers);
+});
 
 let dataSet = null;
 
@@ -46,12 +59,13 @@ $(document).ready(() => {
 
                     Table.writeHierarchicalRow(global.header, global.inferredValues);
 
-                    throw "TBD!";
+                    console.warn("TBD!");
+                    return false;
 
                     $('#genHierarchicalObj').click( () => {
 
                         let correctValues = Utilities.getCorrectValuesOnly(global.content, global.errors);
-                        console.log(correctValues)
+                        console.log(correctValues);
                         let csv = Utilities.csvToJSON(global.header, correctValues, DefaultValues.DELIMITER),
                             teste = {},
                             groupBy = [],
