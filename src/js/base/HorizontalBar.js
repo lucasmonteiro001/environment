@@ -9,7 +9,7 @@ const HEIGHT = 480;
 
 export default class HorizontalBar extends VisualizationTechnique {
 
-    properties () {
+    static properties () {
 
         this._x = null;
         this._y = null;
@@ -18,18 +18,19 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._xAxisContainer = null;
         this._yAxisContainer = null;
         // TODO pertence a visualization technique
-        this._margin = {top: 30, right: 10, bottom: 20, left: 20};
-        this._width = WIDTH - this._margin.left - this._margin.right;
-        this._height = HEIGHT - this._margin.top - this._margin.bottom;
     }
 
     constructor(container, data) {
 
         super(container, data);
 
-        this.properties();
+        HorizontalBar.properties.apply(this);
 
-        this._svgCanvas = d3.select(container).append("svg")
+        this._width = WIDTH - this._margin.left - this._margin.right;
+
+        this._height = HEIGHT - this._margin.top - this._margin.bottom;
+
+        this._svgCanvas = d3.select(this._container).append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet");
 
         this._svgMargin = this._svgCanvas.append("g")
@@ -232,6 +233,8 @@ export default class HorizontalBar extends VisualizationTechnique {
 
     update(data) {
 
+        console.log(this);
+
         // TODO t sera chamado de transition e mudar para VisualizationTechnique
         let t = d3.transition().duration(750),
             delay = (d, i) => i * 50;
@@ -239,7 +242,7 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._data = data;
 
         // JOIN new data with old elements.
-        let bar = this.svg().selectAll(".bar")
+        let bar = this._svg.selectAll(".bar")
             .data(data, function(d) { return d.key; });
 
         // EXIT

@@ -5,9 +5,7 @@ import Utilities from './modules/Utilities';
 import DefaultValues from './modules/DefaultValues';
 import Table from './modules/Table';
 import DataSet from './base/DataSet';
-import Dimension from './base/Dimension';
 import HorizontalBar from './base/HorizontalBar';
-import BarChart from './base/BarChart';
 
 const d3 = require('d3');
 
@@ -25,24 +23,24 @@ global.hierarchicalObj = [];
 
 $(document).ready(function () {
 
+    let barras = new HorizontalBar("#container-visualizacao", familyMembers);
+    let c = new HorizontalBar("#cool", familyMembers);
 
-    let barras =  new HorizontalBar("#container-visualizacao", familyMembers);
+    global.ordenaValueDSC = function ordenaValueDSC() { barras.sort("valueDSC"); };
+    global.ordenaValueASC = function ordenaValueASC() { barras.sort("valueASC"); };
+    global.ordenaNameDSC = function ordenaNameDSC() {	barras.sort("nameDSC");	};
+    global.ordenaNameASC = function ordenaNameASC() {	barras.sort("nameASC");	};
 
-    global.ordenaValueDSC = function ordenaValueDSC() { barras.sort("valueDSC"); }
-    global.ordenaValueASC = function ordenaValueASC() { barras.sort("valueASC"); }
-    global.ordenaNameDSC = function ordenaNameDSC() {	barras.sort("nameDSC");	}
-    global.ordenaNameASC =  function ordenaNameASC() {	barras.sort("nameASC");	}
+    d3.interval(function () {
 
-    // d3.interval(function () {
-    //
-    //     familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
-    //     familyMembers = familyMembers.map(function(member, i) {
-    //         return {key: member, value: Math.floor(Math.random() * (10 - 0)) + 0};
-    //     });
-    //
-    //     x.update(familyMembers);
-    //
-    // }, 1500);
+     familyMembers = ['Jon', 'James', 'Robert', 'Mary'];
+     familyMembers = familyMembers.map(function(member, i) {
+     return {key: member, value: Math.floor(Math.random() * (10 - 0)) + 0};
+     });
+
+     barras.update(familyMembers);
+
+     }, 1500);
 });
 
 let dataSet = null;
@@ -70,71 +68,71 @@ $(document).ready(() => {
         // Monitor for hierarchical data selected from the user
         $('.isHierarchical').find('[type="checkbox"]').change( (e) => {
 
-                let checkbox = e.target;
+            let checkbox = e.target;
 
-                // If checkbox is selected
-                if(checkbox.checked) {
+            // If checkbox is selected
+            if(checkbox.checked) {
 
-                    Table.writeHierarchicalRow(global.header, global.inferredValues);
+                Table.writeHierarchicalRow(global.header, global.inferredValues);
 
-                    console.warn("TBD!");
-                    return false;
+                console.warn("TBD!");
+                return false;
 
-                    $('#genHierarchicalObj').click( () => {
+                /*$('#genHierarchicalObj').click( () => {
 
-                        let correctValues = Utilities.getCorrectValuesOnly(global.content, global.errors);
-                        console.log(correctValues);
-                        let csv = Utilities.csvToJSON(global.header, correctValues, DefaultValues.DELIMITER),
-                            teste = {},
-                            groupBy = [],
-                            count = 0,
-                            row = $('.hierarchicalRow').find('select'),
-                            root;
+                    let correctValues = Utilities.getCorrectValuesOnly(global.content, global.errors);
+                    console.log(correctValues);
+                    let csv = Utilities.csvToJSON(global.header, correctValues, DefaultValues.DELIMITER),
+                        teste = {},
+                        groupBy = [],
+                        count = 0,
+                        row = $('.hierarchicalRow').find('select'),
+                        root;
 
-                        console.log(row);
+                    console.log(row);
 
-                        $.each(row, (i, val) => {
+                    $.each(row, (i, val) => {
 
-                            let selectedValue = $(val).val(),
-                                headerName = $(val).attr("value");
+                        let selectedValue = $(val).val(),
+                            headerName = $(val).attr("value");
 
-                            if(selectedValue !== '#') {
+                        if(selectedValue !== '#') {
 
-                                groupBy.push(selectedValue);
-                                teste[global.header.indexOf($(val).parent().text().split("#")[0])] = global.header.indexOf(selectedValue);
-                            } else {
+                            groupBy.push(selectedValue);
+                            teste[global.header.indexOf($(val).parent().text().split("#")[0])] = global.header.indexOf(selectedValue);
+                        } else {
 
-                                root = global.header.indexOf($(val).parent().text().split("#")[0]);
-                            }
-                        });
-
-                        let g = [];
-
-                        console.log(teste);
-                        console.log(g);
-
-                        // se groupBy nao for vazio
-                        if(groupBy !== []) {
-
-                            let groups = groupBy.map( (val) => {
-                                return '.key(function(d) { return d.' + val + ';})';
-                            });
-
-                            let nest = 'return ' + 'd3.nest()' + groups.join('') + '.entries(' + JSON.stringify(csv) + ')',
-                                f = new Function(nest);
-
-                            console.log(f);
-                            console.log(f());
-
+                            root = global.header.indexOf($(val).parent().text().split("#")[0]);
                         }
-
                     });
 
-                }
-                else {
+                    let g = [];
 
-                    $('.hierarchicalRow').remove();
-                }
+                    console.log(teste);
+                    console.log(g);
+
+                    // se groupBy nao for vazio
+                    if(groupBy !== []) {
+
+                        let groups = groupBy.map( (val) => {
+                            return '.key(function(d) { return d.' + val + ';})';
+                        });
+
+                        let nest = 'return ' + 'd3.nest()' + groups.join('') + '.entries(' + JSON.stringify(csv) + ')',
+                            f = new Function(nest);
+
+                        console.log(f);
+                        console.log(f());
+
+                    }
+
+                });*/
+
+            }
+            else {
+
+                $('.hierarchicalRow').remove();
+            }
         });
     };
 

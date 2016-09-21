@@ -20,7 +20,7 @@ export default class VisualizationTechnique {
     /**
      * Define all class properties
      */
-    properties() {
+    static properties() {
 
         this._id = VisualizationTechnique.nextId; // should be automatically generated
         ID_COUNTER = ID_COUNTER + 1;
@@ -29,16 +29,19 @@ export default class VisualizationTechnique {
         this._data = null;
         this._width = WIDTH_CONVENTION_D3;
         this._height = HEIGHT_CONVENTION_D3;
-        this._marginTop = MARGIN_CONVENTION_D3.top;
-        this._marginRight = MARGIN_CONVENTION_D3.right;
-        this._marginBottom = MARGIN_CONVENTION_D3.bottom;
-        this._marginLeft = MARGIN_CONVENTION_D3.left;
+        this._margin = {
+            top: MARGIN_CONVENTION_D3.top,
+            right: MARGIN_CONVENTION_D3.right,
+            bottom: MARGIN_CONVENTION_D3.bottom,
+            left: MARGIN_CONVENTION_D3.left
+        };
         this._svg = null;
         this._svgCanvas = null;
         this._svgMargin = null;
         this._pallete = null;
         this._defaultColor = null;
         this._color = null;
+
     }
 
     static get nextId() {
@@ -54,11 +57,10 @@ export default class VisualizationTechnique {
      */
     constructor(container = "", data = []) {
 
-        this.properties();
+        VisualizationTechnique.properties.apply(this);
 
-        this.container = container;
-        this.data(data);
-
+        this._container = container;
+        this._data = data;
     }
 
     id(id) {
@@ -76,25 +78,23 @@ export default class VisualizationTechnique {
      * id should start with # and class with dot (.)
      * @param container
      */
-    container (container) {
+    container (Container) {
 
         if (!arguments.length) {
             return this._container;
         }
 
-        container = container.toString().trim();
+        Container = Container.toString().trim();
 
-        if(container !== "body") {
-            if(container[0] !== "#" && container[0] !== ".") {
-                if(container.length < 2) {
+        if(Container !== "body") {
+            if(Container[0] !== "#" && Container[0] !== ".") {
+                if(Container.length < 2) {
                     throw "Container should be either body, or a element starting with # or .";
                 }
             }
         }
 
-        console.warn("jQuery element selection not supported yet for container binding!");
-
-        this._container = container;
+        this._container = Container;
     }
 
     svgCanvas (svgCanvas) {
@@ -172,66 +172,6 @@ export default class VisualizationTechnique {
         this._height = height;
     }
 
-    marginTop (marginTop) {
-
-        if (!arguments.length) {
-            return this._marginTop;
-        }
-
-        marginTop = parseInt(marginTop);
-
-        if(isNaN(marginTop)) {
-            throw "{marginTop} should be an Integer";
-        }
-
-        this._marginTop = marginTop;
-    }
-
-    marginRight(marginRight) {
-
-        if (!arguments.length) {
-            return this._marginRight;
-        }
-
-        marginRight = parseInt(marginRight);
-
-        if(isNaN(marginRight)) {
-            throw "{marginRight} should be an Integer";
-        }
-
-        this._marginRight = marginRight;
-    }
-
-    marginBottom(marginBottom) {
-
-        if (!arguments.length) {
-            return this._marginBottom;
-        }
-
-        marginBottom = parseInt(marginBottom);
-
-        if(isNaN(marginBottom)) {
-            throw "{marginBottom} should be an Integer";
-        }
-
-        this._marginBottom = marginBottom;
-    }
-
-    marginLeft (marginLeft) {
-
-        if (!arguments.length) {
-            return this._marginLeft;
-        }
-
-        marginLeft = parseInt(marginLeft);
-
-        if(isNaN(marginLeft)) {
-            throw "{marginLeft} should be an Integer";
-        }
-
-        this._marginLeft = marginLeft;
-    }
-
     svg (svg) {
 
         if (!arguments.length) {
@@ -239,6 +179,15 @@ export default class VisualizationTechnique {
         }
 
         this._svg = svg;
+    }
+
+    margin (margin) {
+
+        if (!arguments.length) {
+            return this._margin;
+        }
+
+        this._margin = margin;
     }
 
     /**
