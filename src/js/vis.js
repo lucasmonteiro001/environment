@@ -26,6 +26,9 @@ $(document).ready(function () {
     let barras = new HorizontalBar("#container-visualizacao", familyMembers);
     let c = new HorizontalBar("#cool", familyMembers);
 
+    console.log(barras);
+    console.log(c);
+
     global.ordenaValueDSC = function ordenaValueDSC() { barras.sort("valueDSC"); };
     global.ordenaValueASC = function ordenaValueASC() { barras.sort("valueASC"); };
     global.ordenaNameDSC = function ordenaNameDSC() {	barras.sort("nameDSC");	};

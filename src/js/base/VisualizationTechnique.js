@@ -2,6 +2,8 @@
  * Created by lucas on 7/16/16.
  */
 
+const d3 = require('d3');
+
 /**
  * This is the id given to a Visualization Technique when it is first instantiated
  * @type {number}
@@ -41,6 +43,8 @@ export default class VisualizationTechnique {
         this._pallete = null;
         this._defaultColor = null;
         this._color = null;
+        this._transition = d3.transition().duration(750);
+        this._delay = (d, i) => i * 50;
 
     }
 
@@ -140,6 +144,24 @@ export default class VisualizationTechnique {
         }
 
         this._color = color;
+    }
+
+    transition (transition) {
+
+        if (!arguments.length) {
+            return this._transition;
+        }
+
+        this._transition = transition;
+    }
+
+    delay (delay) {
+
+        if (!arguments.length) {
+            return this._delay;
+        }
+
+        this._delay = delay;
     }
 
     width (width) {

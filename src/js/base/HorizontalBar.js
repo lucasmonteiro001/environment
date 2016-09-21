@@ -17,7 +17,6 @@ export default class HorizontalBar extends VisualizationTechnique {
         this._yAxis = null;
         this._xAxisContainer = null;
         this._yAxisContainer = null;
-        // TODO pertence a visualization technique
     }
 
     constructor(container, data) {
@@ -182,10 +181,6 @@ export default class HorizontalBar extends VisualizationTechnique {
     }
 
     sort (value) {
-        //FIXME
-        let t = d3.transition().duration(750),
-            delay = (d, i) => i * 50;
-
 
         switch(value) {
 
@@ -221,23 +216,17 @@ export default class HorizontalBar extends VisualizationTechnique {
         let y0 = this._y.domain(this._data.map(d => d.key))
             .copy();
 
-        this._svg.transition(t).selectAll(".bar")
-            .delay(delay)
+        this._svg.transition(this._transition).selectAll(".bar")
+            .delay(this._delay)
             .attr("y", d => y0(d.key) );
 
-        this._yAxisContainer.transition(t)
+        this._yAxisContainer.transition(this._transition)
             .call(this._yAxis)
             .selectAll("g")
-            .delay(delay);
+            .delay(this._delay);
     }
 
     update(data) {
-
-        console.log(this);
-
-        // TODO t sera chamado de transition e mudar para VisualizationTechnique
-        let t = d3.transition().duration(750),
-            delay = (d, i) => i * 50;
 
         this._data = data;
 
@@ -248,7 +237,7 @@ export default class HorizontalBar extends VisualizationTechnique {
         // EXIT
         // Remove old elements as needed.
         bar.exit().attr("class", "exit")
-            .transition(t)
+            .transition(this._transition)
             .attr("x", (this._width / 4))
             .style("fill-opacity", "#CCCCCC")
             .style("fill-opacity", 1e-6)
@@ -275,7 +264,7 @@ export default class HorizontalBar extends VisualizationTechnique {
 
         // UPDATE old elements present in new data.
         bar.attr("height", this._y.bandwidth())
-            .transition(t)
+            .transition(this._transtion)
             .attr("width", d => this._x(d.value))
             .attr("y", d => this._y(d.key))
             .style("fill", d => (d.group) ? this._color(d.group) : this._defaultColor);
@@ -288,14 +277,14 @@ export default class HorizontalBar extends VisualizationTechnique {
             .attr("width", 0)
             .attr("y", d => this._y(d.key) )
             .style("fill", d => (d.group) ? this._color(d.group) : this._defaultColor)
-            .transition(t).delay(delay)
+            .transition(this._transition).delay(this._delay)
             .attr("x", 0)
             .attr("width", d => this._x(d.value) );
 
-        this._xAxisContainer.transition(t)
+        this._xAxisContainer.transition(this._transition)
             .call(this._xAxis);
 
-        this._yAxisContainer.transition(t)
+        this._yAxisContainer.transition(this._transition)
             .call(this._yAxis);
 
     }
