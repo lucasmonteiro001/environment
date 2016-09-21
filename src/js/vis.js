@@ -29,10 +29,10 @@ $(document).ready(function () {
     console.log(barras);
     console.log(c);
 
-    global.ordenaValueDSC = function ordenaValueDSC() { barras.sort("valueDSC"); };
-    global.ordenaValueASC = function ordenaValueASC() { barras.sort("valueASC"); };
-    global.ordenaNameDSC = function ordenaNameDSC() {	barras.sort("nameDSC");	};
-    global.ordenaNameASC = function ordenaNameASC() {	barras.sort("nameASC");	};
+    global.ordenaValueDSC = function ordenaValueDSC() { c.sort("valueDSC"); };
+    global.ordenaValueASC = function ordenaValueASC() { c.sort("valueASC"); };
+    global.ordenaNameDSC = function ordenaNameDSC() { c.sort("nameDSC"); };
+    global.ordenaNameASC = function ordenaNameASC() { c.sort("nameASC"); };
 
     d3.interval(function () {
 
